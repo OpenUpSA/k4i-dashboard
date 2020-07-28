@@ -9,36 +9,65 @@ class CustomBubbles extends dc.BubbleChart {
         this.xAxisPadding(200)
         this.yAxis().tickValues([]);
         // console.log(this.yAxis());
+
+        this.isTopCrownChart = false;
+        this.currentMax = 0;
         
+    }
+
+    isTopChart(){
+        return this.isTopCrownChart;
     }
 
     createNodes() {
 
         console.log('createNodes...')
 
+        this.currentMax = 0;
         var rawData = this.data()
+        console.log(rawData);
+        
 
         // use max size in the data as the max in the scale's domain
         // note we have to ensure that size is a number
-        const maxSize = d3.max(rawData, d => +d.value);
+        this.currentMax = d3.max(rawData, d => +d.value);
 
 
         // size bubbles based on area
         const radiusScale = d3.scaleSqrt()
-            .domain([0, maxSize])
-            .range([0, 32])
+            .domain([0, this.currentMax])
+            .range([0, 8])
 
-        // TODO retrieve x and y
-        // use map() to convert raw data into node data
-        var buildingDataNodes = rawData.map(d => ({
-            ...d,
-            radius: radiusScale(+d.value) + 10, // 10min
-            x: (Math.random() - 0.5) * 1,
-            y: (Math.random() - 0.5) * 1
-        }))
+        if (this.dataNodes.length > 0 && false){
+            //var victim = this.dataNodes[2];
+            //victim.value = 20
+            //victim.radius = radiusScale(victim.value) + 10
 
-        this.dataNodes = buildingDataNodes;
-        console.log("createdNodes", this.dataNodes);
+            this.dataNodes.forEach((elem, ind) => {
+                var kkey = elem.key
+                var uElem = rawData.find(updElem => updElem.key == kkey)
+                var uVal = +uElem.value
+                console.log(kkey, elem.value, uVal);
+                this.dataNodes[ind].value = uVal;
+                this.dataNodes[ind].radius = radiusScale(uVal) + 10
+            })
+
+            console.log("createdNodes FAKE", this.dataNodes);
+        } else {
+
+            // TODO retrieve x and y
+            // use map() to convert raw data into node data
+            var buildingDataNodes = rawData.map(d => ({
+                ...d,
+                radius: radiusScale(+d.value) + 10, // 10min
+                x: BUB1_WIDTH/2, // (Math.random() - 0.5) * 1 * 0,
+                y: BUB1_HEIGHT/2 //(Math.random() - 0.5) * 1 * 0
+            }))
+
+            this.dataNodes = buildingDataNodes;
+        
+            console.log("createdNodes RLY", this.dataNodes);
+        }
     }
 
     _shouldLabel(d){
@@ -92,27 +121,29 @@ class CustomBubbles extends dc.BubbleChart {
             .append('circle').attr('class', (d, i) => `${this.BUBBLE_CLASS}`)
             .on('click', d => this.onClick(d))
             .attr('r', d => d.radius)
-            .attr('fill', d => '#2e78f6')
-            .attr('stroke', "blue")
-            .attr('stroke-width', "2")
+            .attr('fill', (d) =>  
+                !this.isTopChart()? '#2e78f6':
+                (d.value == this.currentMax? '#ff7300': '#9f9f9f')
+                )
 
         var labelsSVG = bubbleGEnter
             .append('text')
             // .attr('dy', '.3em')
             .style('text-anchor', 'middle')
             .style('font-size', 10)
-            .text(d => " " + d.key + ": " + d.value)
+            .text(this.title())
             .style("visibility", function(d) {
-                // var ddd = d3.select(this.parentNode).select('circle').attr('r')*2;
-                // var mmm = d3.select(this.parentNode).select('text').attr({ x: -99999, y: -99999 }).node().getBBox();
-                // console.log("lbls", ddd, mmm);
+                var diam = d3.select(this.parentNode).select('circle').attr('r')*2;
+                var tlen = d3.select(this.parentNode).select('text').node().getComputedTextLength();
 
-                return 80 > d3.select(this.parentNode).select('circle').attr('r')*2? "hidden": "visible" // display or not
+                return diam < tlen? "hidden": "visible" // display or not
             })
 
-        bubbleG = bubbleGEnter.merge(bubbleG);
+        // bubbleG = bubbleGEnter.merge(bubbleG);
+        bubbleG = bubblesSVG.merge(bubbleG);
 
         // create a force simulation and add forces to it
+        const forceStrength = 0.2;
         const simulation = d3.forceSimulation()
             .force('charge', d3.forceManyBody().strength(charge))
             // .force('center', d3.forceCenter(centre.x, centre.y))
@@ -129,20 +160,31 @@ class CustomBubbles extends dc.BubbleChart {
                 console.log("ON TICK");
 
                 // repositioning
-                bubblesSVG
+                //bubblesSVG
+                bubbleG
                     .attr('cx', d => d.x)
                     .attr('cy', d => d.y)
+
+                    .attr('r', d => d.radius)
 
                 labelsSVG
                     .attr('x', d => d.x)
                     .attr('y', d => d.y)
+
+                    /*
+                    .style("visibility", function(d) {
+                        var diam = d3.select(this.parentNode).select('circle').attr('r')*2;
+                        var tlen = d3.select(this.parentNode).select('text').node().getComputedTextLength();
+                        console.log("lbls", diam, tlen, d.key);
+        
+                        return diam < tlen? "hidden": "visible" // display or not
+                    })
+                    */
             })
             .restart();
 
         this._doRenderLabel(bubbleGEnter);
         this._doRenderTitles(bubbleGEnter);
-
-        // textElement.getBBox();
 
         return bubbleG;
     }

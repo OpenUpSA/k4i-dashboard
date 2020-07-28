@@ -1,142 +1,965 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!-- This site was created in Webflow. http://www.webflow.com -->
+<!-- Last Published: Wed Jul 22 2020 11:06:56 GMT+0000 (Coordinated Universal Time) -->
+<html data-wf-domain="k4i-nemisa.webflow.io" data-wf-page="5f156443ce36df6f86e98330"
+    data-wf-site="5ed4a1b297a20a05d4926631">
 
-<html lang = "en">
-   <head>
-  <!--    <script src = "js/d3.js"></script>  -->
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src = "https://dc-js.github.io/dc.js/js/crossfilter.js"></script>
-<script src = "https://dc-js.github.io/dc.js/js/dc.js"></script>
-<!-- <script src = "http://localhost/CustomBubbles.js"></script> -->
-<script src = "CustomBubbles.js"></script>
-
-
-<link rel="stylesheet" type="text/css" href="https://dc-js.github.io/dc.js/css/dc.css"/>
-
-<link href="https://assets.website-files.com/5ed4a1b297a20a05d4926631/css/k4i-nemisa.webflow.7ccc35bf6.css"
+<head>
+    <meta charset="utf-8" />
+    <title>Dashboard</title>
+    <meta content="Dashboard" property="og:title" />
+    <meta content="Dashboard" property="twitter:title" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="Webflow" name="generator" />
+    <link href="https://assets.website-files.com/5ed4a1b297a20a05d4926631/css/k4i-nemisa.webflow.7ccc35bf6.css"
         rel="stylesheet" type="text/css" />
-
-   </head>
-
-<style>
-.blue {
-    color: blue;
-}
-.dc-chart g.row text {
-    fill: black;
-}
-.review {
-    fill: red;
-}
-
-.chart-filter__name {
-    max-width: unset;
-}
-
-#dc-learn-bubbles .circle:hover{
-   stroke: purple !important;
-}
-
-</style>
-   
-<body>
-
-<div class='container' style='font: 12px sans-serif;'>
-
-    <div class="chart-filters__label">Survey filters:</div>
-
-        <div class="chart-filter-template" style="visibility: hidden">
-            <div class="chart-filter__name truncate">High speed internet connection</div>
-            <div class="chart-filter__remove">
-                <div class="fa-icon"></div>
-            </div>
-        </div>
-
-    <div class="chart-filters__wrap">
-        <div style="display:none;opacity:0" class="chart-filters__bg"></div>
-        <div id="w-node-42ca836218b3-86e98330" class="chart-filters__inner">
-            <div class="chart-filter chart-filter--default">
-                <div class="chart-filter__name">No filters applied</div>
-            </div>
-            <div class="chart-filter">
-                <div class="chart-filter__name truncate">High speed internet connection</div>
-                <div class="chart-filter__remove">
-                    <div class="fa-icon"></div>
-                </div>
-            </div>
-            <div class="chart-filter">
-                <div class="chart-filter__name truncate">High speed internet connection</div>
-                <div class="chart-filter__remove">
-                    <div class="fa-icon"></div>
-                </div>
-            </div>
-        </div>
-        <div id="w-node-0759ecf6ee71-86e98330" class="chart-filters__filtered-value">Filtered: <span
-                class="filtered-value">320/376</span></div>
-    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
+    <script type="text/javascript">WebFont.load({ google: { families: ["Karla:regular,italic,700"] } });</script>
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" type="text/javascript"></script><![endif]-->
+    <script
+        type="text/javascript">!function (o, c) { var n = c.documentElement, t = " w-mod-"; n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n.className += t + "touch") }(window, document);</script>
+    <link href="https://assets.website-files.com/img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="https://assets.website-files.com/img/webclip.png" rel="apple-touch-icon" />
 
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src = "https://dc-js.github.io/dc.js/js/crossfilter.js"></script>
+    <script src = "https://dc-js.github.io/dc.js/js/dc.js"></script>
 
 
+    <script src = "CustomBubbles.js"></script>
 
-<div id="filteredInfo" class="filtered-value"></div>
-    
-
-<!-- <div id = 'vis'></div> -->
-
-    <h4>Target: union (select multiple different groups)</h4>
-
-        <div>
-            <div id="dc-activities-heatmap"></div>
-        </div>
-
-        <div>
-            <div id = "dc-gender-chart"></div>
-        </div>
-
-        <h4>Fears (not for filtering, just aggregation)
-        <div>
+    <style>
+            .blue {
+                color: blue;
+            }
+            .dc-chart g.row text {
+                fill: black;
+            }
+            .review {
+                fill: red;
+            }
             
-        </div>
-        <div class="summary-block">
-            <div class="block-inner">
-                <h4 class="overview-chart__title">Perceived risk:</h4>
-                <div class="overview-chart__largest">
-                    <div class="overview-chart__largest_icon fa-icon"></div>
-                    <div class="overview-chart__largest_name">Data security</div>
+            .chart-filter__name {
+                max-width: unset;
+            }
+            
+            circle:hover{
+                stroke: purple !important;
+                stroke-width: 2 !important;
+            }
+            
+            .node>text {
+                pointer-events: none;
+            }
+            
+            #dc-learn-bubbles g.axis {
+                visibility: collapse;
+            }
+            
+            #dc-risk-bubbles g.axis {
+                visibility: collapse;
+            }
+
+            #dc-attitude-agg-bubbles g.axis {
+                visibility: collapse;
+            }
+
+            #dc-risk-agg-bubbles g.axis {
+                visibility: collapse;
+            }
+
+            g.chart-body{
+                display: contents;
+            }
+            
+            #dc-activities-heatmap .cols text {
+                pointer-events: none;
+                /* transform: translate(0px,300px)rotate(-90deg)translate(-0px,-300px) */
+            }
+            
+        </style>
+
+
+
+
+</head>
+
+<body class="body"><a href="#top" class="back-to-top w-inline-block">
+        <div class="fa-icon"></div>
+    </a>
+    <div id="top" data-w-id="9b05f6bd-2f6e-63f6-4cc3-175550031137" class="top-nav">
+        <div class="top-nav__container"><a id="w-node-175550031139-50031137" href="/"
+                class="top-nav__logo w-inline-block">
+                <div>NEMISA</div>
+            </a>
+            <div id="w-node-17555003113c-50031137" class="top-nav__links"><a
+                    data-w-id="9b05f6bd-2f6e-63f6-4cc3-17555003113d" href="#"
+                    class="top-nav__link-dropdown surveys w-inline-block">
+                    <div class="top-nav__link_text">
+                        <div>Surveys</div>
+                    </div>
+                </a><a href="/findings" class="top-nav__link w-inline-block">
+                    <div class="top-nav__link_text">
+                        <div>Findings</div>
+                    </div>
+                </a><a href="#" class="top-nav__link w-inline-block">
+                    <div class="top-nav__link_text">
+                        <div>Contact</div>
+                    </div>
+                </a>
+                <div data-w-id="9b05f6bd-2f6e-63f6-4cc3-175550031149" class="top-nav__links_deselect"></div>
+            </div>
+            <div id="w-node-6571fece15cc-50031137" class="top-nav__menu">
+                <div data-w-id="31e54e20-1c71-2b05-b895-54622c13e093" class="top-nav__menu_trigger">
+                    <div class="menu__trigger_open">
+                        <div class="fa-icon"></div>
+                    </div>
+                    <div class="menu__trigger_close">
+                        <div class="fa-icon"></div>
+                    </div>
                 </div>
-                <div id="dc-risk-bubbles" class="overview-chart__chart"></div>
-                
+                <div class="top-nav__menu_dropdown">
+                    <div class="top-nav__menu_links"><a href="/survey" class="top-nav__column-link w-inline-block">
+                            <div class="menu__link_header">
+                                <div class="menu__link_title">
+                                    <div class="top-nav__column_title-icon">
+                                        <div class="fa-icon small"></div>
+                                    </div>
+                                    <h4 class="clear">Digital Skills Survey</h4>
+                                </div>
+                                <div class="menu__link_tag">
+                                    <div>BETA</div>
+                                </div>
+                            </div>
+                        </a><a href="/findings" class="top-nav__column-link w-inline-block">
+                            <div class="menu__link_header">
+                                <div class="menu__link_title">
+                                    <div class="top-nav__column_title-icon">
+                                        <div class="fa-icon small"></div>
+                                    </div>
+                                    <h4 class="clear">Survey Findings</h4>
+                                </div>
+                                <div class="menu__link_tag">
+                                    <div>BETA</div>
+                                </div>
+                            </div>
+                        </a><a href="#" class="top-nav__link w-inline-block">
+                            <div>Contact</div>
+                        </a></div>
+                </div>
+            </div>
+            <div class="top-nav__content">
+                <div class="top-nav__content-block surveys"><a id="w-node-17555003114c-50031137" href="/survey"
+                        class="top-nav__column-link w-inline-block">
+                        <div class="top-nav__column_header">
+                            <div class="menu__link_title">
+                                <div class="top-nav__column_title-icon">
+                                    <div class="fa-icon small"></div>
+                                </div>
+                                <h4 class="clear">Digital Skills Survey</h4>
+                            </div>
+                        </div>
+                        <div class="top-nav__column_tag">
+                            <div>BETA</div>
+                        </div>
+                        <div class="top-nav__column_text">
+                            <p class="clear">This survey is for people seeking employment or wanting to up-skill within
+                                their current industry or profession.</p>
+                        </div>
+                        <div class="top-nav__column_button">
+                            <div>Take this survey</div>
+                            <div class="top-nav__column_button-icon">
+                                <div class="fa-icon small"></div>
+                            </div>
+                        </div>
+                    </a><a id="w-node-175550031160-50031137" href="#"
+                        class="top-nav__column-link disabled w-inline-block">
+                        <div class="top-nav__column_header">
+                            <div class="menu__link_title">
+                                <div class="top-nav__column_title-icon">
+                                    <div class="fa-icon small"></div>
+                                </div>
+                                <h4 class="clear">Team Survey</h4>
+                            </div>
+                        </div>
+                        <div class="top-nav__column_tag">
+                            <div>COMING SOON</div>
+                        </div>
+                        <div class="top-nav__column_text">
+                            <p class="clear">This survey is for businesses looking to align their employment strategies
+                                to the current state of their industry.</p>
+                        </div>
+                        <div class="top-nav__column_button disabled">
+                            <div>Coming Soon</div>
+                            <div class="top-nav__column_button-icon">
+                                <div class="fa-icon small"></div>
+                            </div>
+                        </div>
+                    </a><a id="w-node-175550031174-50031137" href="#" class="top-nav__column-link w-inline-block">
+                        <div class="top-nav__column_header">
+                            <div class="menu__link_title">
+                                <div class="top-nav__column_title-icon">
+                                    <div class="fa-icon small"></div>
+                                </div>
+                                <h4 class="clear">Survey Findings</h4>
+                            </div>
+                        </div>
+                        <div class="top-nav__column_tag">
+                            <div>BETA</div>
+                        </div>
+                        <div class="top-nav__column_text">
+                            <p class="clear">Explore the results of our survey and find out how to best incorporate our
+                                findings into your </p>
+                        </div>
+                        <div class="top-nav__column_button">
+                            <div>Explore findings</div>
+                            <div class="top-nav__column_button-icon">
+                                <div class="fa-icon small"></div>
+                            </div>
+                        </div>
+                    </a></div>
+            </div>
+            <div data-w-id="9b05f6bd-2f6e-63f6-4cc3-175550031188" class="top-nav__deselect"></div>
+        </div>
+        <div class="menu-deselect"></div>
+    </div>
+    <div class="menu-deselect"></div>
+    <div class="info-modal__wrap">
+        <div data-w-id="1d5bea1a-3f0c-5208-4ae5-175cc35ed84d"
+            style="-webkit-transform:translate3d(0, 8EM, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 8EM, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 8EM, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 8EM, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);display:none;opacity:0"
+            class="info-modal block">
+            <div class="info-modal__text">
+                <p class="clear">Click on a value in any chart to filter the survey results</p>
+            </div>
+            <div data-w-id="c81141b6-9b5f-3872-24d3-02661a46ded5" class="info-modal__button">
+                <div class="fa-icon"></div>
             </div>
         </div>
-
-        <div>
-            <div id="dc-attitude-tech-heatmap"></div>
+    </div>
+    <div class="section no-padding-bottom">
+        <section id="results" data-scroll="top" class="section-link"></section>
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-4a6774ed9090-86e98330" class="heading-2">
+                    <div class="heading-2__title">
+                        <div class="heading-2__icon">
+                            <div class="fa-icon medium"></div>
+                        </div>
+                        <h2 class="clear">Survey Findings</h2>
+                    </div>
+                </div>
+                <div id="w-node-bbb595e95b92-86e98330" class="block hide-sm">
+                    <div class="block-inner block-inner--h block-iiner--center">
+                        <div class="block__label block-label--no-margin">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Responses:</h4>
+                        </div>
+                        <div class="response-count">
+                            <div id="responses-value"> </div>
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <h4>Target: intersection (choose chart)</h4>
-        <div>
-            <div id = "dc-learn-hor"></div>
+    </div>
+    <div data-w-id="0dcaed13-e0cd-2d45-310d-545ddbd3cda4" class="chart-filters__scroll-trigger"></div>
+    <div class="chart-filters">
+        <div class="page-container no-padding-top">
+            <div class="chart-filters__label">Survey filters:</div>
+            <div class="chart-filters__wrap">
+                <div style="display:none;opacity:0" class="chart-filters__bg"></div>
+                <div id="w-node-42ca836218b3-86e98330" class="chart-filters__inner">
+                    <div class="chart-filter chart-filter--default">
+                        <div class="chart-filter__name">No filters applied</div>
+                    </div>
+                    <div class="chart-filter chart-filter--loading"><img
+                            src="https://assets.website-files.com/5ed4a1b297a20a05d4926631/5f16c793e8444d3a56cc0c6b_loading.gif"
+                            width="10" alt="" class="chart-filter__loading" />
+                        <div class="chart-filter__name truncate">Male</div>
+                    </div>
+                    <div class="chart-filter">
+                        <div class="chart-filter__name truncate">High speed internet connection</div>
+                        <div class="chart-filter__remove">
+                            <div class="fa-icon"></div>
+                        </div>
+                    </div>
+                    <div class="chart-filter">
+                        <div class="chart-filter__name truncate">High speed internet connection</div>
+                        <div class="chart-filter__remove">
+                            <div class="fa-icon"></div>
+                        </div>
+                    </div>
+                    <div class="chart-filter">
+                        <div class="chart-filter__name truncate">High speed internet connection</div>
+                        <div class="chart-filter__remove">
+                            <div class="fa-icon"></div>
+                        </div>
+                    </div>
+                    <div class="chart-filter">
+                        <div class="chart-filter__name truncate">High speed internet connection</div>
+                        <div class="chart-filter__remove">
+                            <div class="fa-icon"></div>
+                        </div>
+                    </div>
+                    <div class="chart-filter">
+                        <div class="chart-filter__name truncate">High speed internet connection</div>
+                        <div class="chart-filter__remove">
+                            <div class="fa-icon"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="w-node-0759ecf6ee71-86e98330" class="chart-filters__filtered-value">Filtered: <span
+                        class="filtered-value">320/376</span></div>
+            </div>
         </div>
-
-        <div>
-            <div id="dc-learn-bubbles"></div>
+    </div>
+    <div class="section no-padding-bottom">
+        <div class="page-container">
+            <div class="summary-grid grid">
+                <div id="w-node-fec1ccb582c3-86e98330" class="heading-3 clear">
+                    <h3 class="clear">Survey overview</h3>
+                </div>
+                <div id="w-node-6c6b0cf46d80-86e98330" class="summary-block">
+                    <div class="block-inner">
+                        <h4 class="overview-chart__title">Most used skill (activities):</h4>
+                        <div class="overview-chart__largest">
+                            <div class="overview-chart__largest_icon fa-icon"></div>
+                            <div class="overview-chart__largest_name" id="top-activ">ZZZZZZ...</div>
+                        </div>
+                        <div id="dc-activ-agg-bubbles" class="overview-chart__chart"></div>
+                    </div>
+                </div>
+                <div class="summary-block">
+                    <div class="block-inner">
+                        <h4 class="overview-chart__title">Skills learning:</h4>
+                        <div class="overview-chart__largest">
+                            <div class="overview-chart__largest_icon fa-icon"></div>
+                            <div class="overview-chart__largest_name" id="top-learn">ZZZZZZ...</div>
+                        </div>
+                        <div id="dc-learn-agg-bubbles" class="overview-chart__chart"></div>
+                    </div>
+                </div>
+                <div class="summary-block">
+                    <div class="block-inner">
+                        <h4 class="overview-chart__title">Current tech:</h4>
+                        <div class="overview-chart__largest">
+                            <div class="overview-chart__largest_icon fa-icon"></div>
+                            <div class="overview-chart__largest_name">Mobile phones</div>
+                        </div><img
+                            src="https://assets.website-files.com/5ed4a1b297a20a05d4926631/5f181da2b9515d0ed82ce04f_Group%20149%20(2).svg"
+                            alt="" class="overview-chart__chart" />
+                    </div>
+                </div>
+                <div class="summary-block">
+                    <div class="block-inner">
+                        <h4 class="overview-chart__title">Future tech:</h4>
+                        <div class="overview-chart__largest">
+                            <div class="overview-chart__largest_icon fa-icon"></div>
+                            <div class="overview-chart__largest_name" id="top-future">ZZZZZZ...</div>
+                        </div>
+                        <div id="dc-future-agg-bubbles" class="overview-chart__chart"></div>
+                    </div>
+                </div>
+                <div class="summary-block">
+                    <div class="block-inner">
+                        <h4 class="overview-chart__title">Perceived risk:</h4>
+                        <div class="overview-chart__largest">
+                            <div class="overview-chart__largest_icon fa-icon"></div>
+                            <div class="overview-chart__largest_name" id="top-risk">ZZZZZZ...</div>
+                        </div>
+                        <div id="dc-risk-agg-bubbles" class="overview-chart__chart"></div>
+                    </div>
+                </div>
+                <div class="summary-block last">
+                    <div class="block-inner">
+                        <h4 class="overview-chart__title">Attitude:</h4>
+                        <div class="overview-chart__largest">
+                            <div class="overview-chart__largest_icon fa-icon"></div>
+                            <div class="overview-chart__largest_name" id="top-attitude">ZZZZZZ...</div>
+                        </div>
+                        <div id="dc-attitude-agg-bubbles" class="overview-chart__chart"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <div id = "dc-birth-chart"></div>
+    </div>
+    <div class="section no-padding-bottom">
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-b1681b5d0ac3-86e98330" class="heading-3 clear">
+                    <h3 class="clear">Survey demographics</h3>
+                </div>
+                <div id="w-node-b1681b5d0ac6-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Industry</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <div class="chart"><canvas id="myChart7"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="w-node-b1681b5d0b30-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Age</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <!-- <div class="chart"><canvas id="myChart7"></canvas></div> -->
+                                <div id = "dc-birth-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="w-node-b1681b5d0b3b-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Gender</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <!-- <div class="chart"><canvas id="myChart7"></canvas></div> -->
+                                <div id = "dc-gender-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="section no-padding-bottom">
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-cd0d4ded0ea5-86e98330" class="heading-3 clear">
+                    <h3 class="clear">Skills in the workplace</h3>
+                </div>
+                <div id="w-node-cd0d4ded0ea8-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Most used skills</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <!-- <div class="chart"><canvas id="myChart7"></canvas></div> -->
+                                <div id="dc-activities-heatmap"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="w-node-626e7144162a-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Where people learn their skills</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <!-- <div class="chart"><canvas id="myChart7"></canvas></div> -->
+                                <div id="dc-learn-bubbles"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section no-padding-bottom">
+        <section id="results" data-scroll="top" class="section-link"></section>
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-4891555bc9de-86e98330" class="heading-3 clear">
+                    <h3 class="clear">Current and future technologies<span class="highlight"></span></h3>
+                </div>
+                <div id="w-node-4891555bc9e3-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Technology currently used</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <!-- <div class="chart"><canvas id="myChart6"></canvas></div> -->
+                                <div id="dc-use-bubbles"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="w-node-4891555bc9ec-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Technology that will be used in the future</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <!-- <div class="chart"><canvas id="myChart5"></canvas></div> -->
+                                <div id="dc-future-hor"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section last">
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-8a9c2e1b32cb-86e98330" class="heading-3 clear">
+                    <h3 class="clear">Risk and attitude</h3>
+                </div>
+                <div id="w-node-8a9c2e1b32d7-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Perceived risks of using technology</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <!-- <div class="chart"><canvas id="myChart7"></canvas></div> -->
+                                <div id="dc-risk-yn-bubbles"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="w-node-68692d508a26-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Attitudes towards technology</h4>
+                        </div>
+                        <div class="results-card__chart">
+                            <div class="loading">
+                                <div class="loading-grad"></div>
+                            </div>
+                            <div class="chart-embed w-embed">
+                                <div class="chart"><canvas id="myChart7"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section last hidden">
+        <section id="training" data-scroll="top" class="section-link"></section>
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-54eee1e28530-86e98330" class="header-with-button">
+                    <div class="heading-2">
+                        <div class="heading-2__icon">
+                            <div class="fa-icon medium"></div>
+                        </div>
+                        <h2 class="clear">Training Resources</h2>
+                    </div><a href="#" class="button w-button">View all training</a>
+                </div>
+                <div id="w-node-93b4525c0697-86e98330" class="heading-3 clear">
+                    <h3 class="clear">Based on <span class="highlight">current industry requirements</span></h3>
+                </div><a id="w-node-83026ffc6674-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Machine Learning</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a><a id="w-node-de6e4d2a20bb-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Cloud Software</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a><a id="w-node-d5d8e2260465-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Word Processing</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a>
+                <div id="w-node-33a206e6a644-86e98330" class="heading-3">
+                    <h3 class="clear">Based on <span class="highlight">future industry requirements</span></h3>
+                </div><a id="w-node-f238c334c414-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Machine Learning</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a><a id="w-node-1fe2b94fd3cb-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Cloud Software</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a><a id="w-node-adc5472987ae-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Word Processing</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a>
+                <div id="w-node-11061c0c568a-86e98330" class="heading-3">
+                    <h3 class="clear">Based on <span class="highlight">most popular skills</span></h3>
+                </div><a id="w-node-c7360a761756-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Machine Learning</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a><a id="w-node-21233538a0c3-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Cloud Software</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a><a id="w-node-1ca7b7a699e4-86e98330" href="#" class="block link w-inline-block">
+                    <div class="block-inner">
+                        <div class="block__header">
+                            <div class="circle-icon">
+                                <div class="circle-icon-fa"></div>
+                                <div class="circle-icon-bg"></div>
+                            </div>
+                        </div>
+                        <div class="block__label">
+                            <h4 class="clear">Word Processing</h4>
+                            <div class="block__label_detail">
+                                <h5 class="clear">12 Training resources</h5>
+                            </div>
+                        </div>
+                        <div class="block__description">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pulvinar velit at
+                                rhoncus tempus.</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-a76814104e84-86e98330" class="heading-3 clear">
+                    <h3 class="clear">Survey overview</h3>
+                </div>
+                <div id="w-node-a76814104e87-86e98330" class="block">
+                    <div class="block-inner">
+                        <div class="block__label underline">
+                            <div class="block__label_icon fa-icon"></div>
+                            <h4 class="clear">Average respondent</h4>
+                        </div>
+                        <div class="block-columns">
+                            <div class="block-row">
+                                <div class="average-respondant__field"><span
+                                        class="average-respondant__category">Gender</span>: <span
+                                        class="average-respondant__metric average-respondant__metric--gender">Male
+                                    </span><span class="average-respondant__percent">50%</span></div>
+                            </div>
+                            <div class="block-row">
+                                <div class="average-respondant__field"><span
+                                        class="average-respondant__category">Age</span>: <span
+                                        class="average-respondant__metric average-respondant__metric--age">20-32
+                                    </span><span class="average-respondant__percent">30%</span></div>
+                            </div>
+                            <div class="block-row">
+                                <div class="block-column">
+                                    <div class="average-respondant__field"><span
+                                            class="average-respondant__category">Industry</span>: <span
+                                            class="average-respondant__metric average-respondant__metric--industry">Accounting
+                                        </span><span class="average-respondant__percent">24%</span></div>
+                                </div>
+                            </div>
+                            <div class="block-row">
+                                <div class="block-column">
+                                    <div class="average-respondant__field"><span
+                                            class="average-respondant__category">Most used skill</span>: <span
+                                            class="average-respondant__metric average-respondant__metric--skill">Accounting
+                                        </span><span class="average-respondant__percent">12%</span></div>
+                                </div>
+                            </div>
+                            <div class="block-row">
+                                <div class="block-column">
+                                    <div class="average-respondant__field"><span
+                                            class="average-respondant__category">Skill acquisition</span>: <span
+                                            class="average-respondant__metric average-respondant__metric--skill-acquisition">Self-taught
+                                        </span><span class="average-respondant__percent">80%</span></div>
+                                </div>
+                            </div>
+                            <div class="block-row">
+                                <div class="block-column">
+                                    <div class="average-respondant__field"><span
+                                            class="average-respondant__category">Current tech</span>: <span
+                                            class="average-respondant__metric average-respondant__metric--current-tech">Email
+                                        </span><span class="average-respondant__percent">10%</span></div>
+                                </div>
+                            </div>
+                            <div class="block-row">
+                                <div class="block-column">
+                                    <div class="average-respondant__field"><span
+                                            class="average-respondant__category">Future tech</span>: <span
+                                            class="average-respondant__metric average-respondant__metric--future-tech">Blockchain
+                                        </span><span class="average-respondant__percent">32%</span></div>
+                                </div>
+                            </div>
+                            <div class="block-row">
+                                <div class="block-column">
+                                    <div class="average-respondant__field"><span
+                                            class="average-respondant__category">Perceived risk</span>: <span
+                                            class="average-respondant__metric average-respondant__metric--risk">Security
+                                        </span><span class="average-respondant__percent">31%</span></div>
+                                </div>
+                            </div>
+                            <div class="block-row last">
+                                <div class="block-column">
+                                    <div class="average-respondant__field"><span
+                                            class="average-respondant__category">Attitude</span>: <span
+                                            class="average-respondant__metric average-respondant__metric--risk">Mostly
+                                            positive </span><span class="average-respondant__percent">60%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section feature">
+        <div class="page-container">
+            <div class="grid align-center">
+                <div id="w-node-c8fec062f9f4-c062f9f1" class="cta-content">
+                    <div class="cta-icon">
+                        <div class="fa-icon large shadow"></div>
+                    </div>
+                    <div class="cta-text">
+                        <div class="cta-headline">
+                            <h2 class="clear">Help us improve our survey</h2>
+                        </div>
+                        <div class="cta-tagline">
+                            <div>Send us feedback about your experience</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="w-node-c8fec062f9ff-c062f9f1" class="cta-button"><a
+                        href="mailto:info@nemisa.co.za?subject=Feedback%20on%20your%20Digital%20Skill%20Survey"
+                        class="button w-button">Send Feedback</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="page-container">
+            <div class="grid">
+                <div id="w-node-a9f0c26e3b27-c26e3b24" class="top-nav__logo">
+                    <div>NEMISA</div>
+                </div>
+                <div id="w-node-a9f0c26e3b2a-c26e3b24" class="footer-column">
+                    <div class="footer-column__title">
+                        <h4 class="clear">Surveys</h4>
+                    </div>
+                    <div class="footer-column__links"><a href="/survey" class="footer-link w-inline-block">
+                            <div>Digital Skills Survey</div>
+                            <div class="footer-link__tag">
+                                <div>BETA</div>
+                            </div>
+                        </a><a href="#" class="footer-link disabled w-inline-block">
+                            <div>Team survey</div>
+                            <div class="footer-link__tag">
+                                <div>COMING SOON</div>
+                            </div>
+                        </a><a href="/findings" class="footer-link w-inline-block">
+                            <div>Survey Findings</div>
+                            <div class="footer-link__tag">
+                                <div>BETA</div>
+                            </div>
+                        </a></div>
+                </div>
+                <div id="w-node-a9f0c26e3b41-c26e3b24" class="footer-column">
+                    <div class="footer-column__title">
+                        <h4 class="clear">Get in touch</h4>
+                    </div>
+                    <div class="footer-column__links"><a href="mailto:info@nemisa.co.za"
+                            class="footer-link w-inline-block">
+                            <div class="footer-link__icon">
+                                <div class="fa-icon"></div>
+                            </div>
+                            <div class="footer-link__text">
+                                <div>info@nemisa.co.za</div>
+                            </div>
+                        </a><a href="tel:+27114840583" class="footer-link w-inline-block">
+                            <div class="footer-link__icon">
+                                <div class="fa-icon"></div>
+                            </div>
+                            <div class="footer-link__text">
+                                <div>+27 11 484 0583</div>
+                            </div>
+                        </a><a href="https://www.facebook.com/NEMISA.Official" target="_blank"
+                            class="footer-link w-inline-block">
+                            <div class="footer-link__icon">
+                                <div class="fa-icon brand"></div>
+                            </div>
+                            <div class="footer-link__text">
+                                <div>nemisa</div>
+                            </div>
+                        </a><a href="https://twitter.com/nemisa_" target="_blank" class="footer-link w-inline-block">
+                            <div class="footer-link__icon">
+                                <div class="fa-icon brand"></div>
+                            </div>
+                            <div class="footer-link__text">
+                                <div>@nemisa_</div>
+                            </div>
+                        </a></div>
+                </div>
+                <div id="w-node-a9f0c26e3b62-c26e3b24" class="footer-legal">
+                    <div>© Copyright NEMISA 2020</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.4.1.min.220afd743d.js?site=5ed4a1b297a20a05d4926631"
+        type="text/javascript" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+    <script src="https://assets.website-files.com/5ed4a1b297a20a05d4926631/js/webflow.cc9d8bc24.js"
+        type="text/javascript"></script>
+    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+    <!-- global code -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+    <script src="https://openupsa.github.io/k4i-survey/js/charts.js"></script>
+    <!-- <script src="js/charts.js"></script> -->
 
+<script>
 
-
-      
-      <table id="dc-test-table" class="table table-striped"></table>
-
-</div>  
-
-
-
-
-      <script>
 
 
 // dbg counter
@@ -154,8 +977,8 @@ const EMAILING = 'How often do you use digital technologies to perform the follo
 const SELFTAUGHT = 'How did you learn to use the digital technologies currently used in your organisation? Tick all that apply (More than one option can be selected). [Self-taught]'
 const SHORTCOURSES = 'How did you learn to use the digital technologies currently used in your organisation? Tick all that apply (More than one option can be selected). [Short-courses]'
 
-const BUB1_WIDTH = 312
-const BUB1_HEIGHT = 256
+const BUB1_WIDTH = 120
+const BUB1_HEIGHT = 120
 
 function replaceLong(s){
 
@@ -173,7 +996,7 @@ var fTableSize = 15
 // location to centre the bubbles
 const centre = { x: BUB1_WIDTH/2, y: BUB1_HEIGHT/2 };
 // strength to apply to the position forces
-const forceStrength = 0.05;
+
 
 // charge is dependent on size of the bubble, so bigger towards the middle
 function charge(d) {
@@ -208,11 +1031,22 @@ var genderPie = dc.pieChart("#dc-gender-chart");
 var learnTagsChart = dc.rowChart("#dc-learn-hor");
 var activHeatmapChart = new dc.HeatMap("#dc-activities-heatmap")
 var learnBubbleChart = new CustomBubbles("#dc-learn-bubbles")
-var riskAggBubbleChart = new CustomBubbles("#dc-risk-bubbles")
+var riskYNBubbleChart = new CustomBubbles("#dc-risk-yn-bubbles")
+var futureChart = dc.rowChart("#dc-future-hor")
+var useBubbleChart = new CustomBubbles("#dc-use-bubbles")
+
+
 var birthChart = dc.barChart("#dc-birth-chart");
 
+var attitudeAggBubbleChart = new CustomBubbles("#dc-attitude-agg-bubbles")
+var riskAggBubbleChart = new CustomBubbles("#dc-risk-agg-bubbles")
+var activAggBubbleChart = new CustomBubbles("#dc-activ-agg-bubbles")
+var learnAggBubbleChart = new CustomBubbles("#dc-learn-agg-bubbles")
+var futureAggBubbleChart = new CustomBubbles("#dc-future-agg-bubbles")
+
+
 // TODO too complicated logic of tags by birthChart (like 1990-1995)
-const CHARTS = [genderPie, learnTagsChart, activHeatmapChart, riskAggBubbleChart, learnBubbleChart];
+const CHARTS = [genderPie, learnTagsChart, activHeatmapChart, riskAggBubbleChart, activAggBubbleChart, attitudeAggBubbleChart, riskYNBubbleChart, learnBubbleChart, futureChart, learnAggBubbleChart, futureAggBubbleChart, useBubbleChart];
 
 
 d3.json(fn, function(data) {
@@ -341,7 +1175,8 @@ if (1){
 
     activHeatmapChart
         .width(600)
-        .height(200)
+        .height(400)
+        .margins({left: 100, top: 0, right: 10, bottom: 100})
         .dimension(activDim)
         //.dimension(ttt)
         .group(activGroup)
@@ -366,7 +1201,7 @@ if (1){
                 
                 dimension.filterFunction(function (d) {
                     // d = array11 of [Email, Often]
-                    dbg_by_name('actRowCategories', d, 40)
+                    dbg_by_name('actRowCategories', d, 4)
 
                     for (var i=0; i < d.length; i++) {
                         var rowCatKey = d[i][0];
@@ -379,6 +1214,12 @@ if (1){
                 return filters;
             })
 
+    /*
+        d3.selectAll('#dc-activities-heatmap g.cols text')
+            .text('qqqqqqqqqqqqq')
+            .attr('transform', "translate(0px,300px)rotate(-90deg)translate(-0px,-300px)")
+    */
+
     activHeatmapChart.xBorderRadius(0);
     activHeatmapChart.yBorderRadius(0);
 }
@@ -387,59 +1228,50 @@ if (1){
 //2 Preceived Risks 
 // aggregated ctg (most dangerous tech)
 
-var RISK_FREQ = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"];
-const agreeDisagreeValueMap = {
-                'Strongly Disagree': 0,
-                'Disagree': 0,
-                'Neutral': 0,
-                'Agree': 1,
-                'Strongly Agree': 1,
-            }
-    
 
-    function grabRiskKeysArray(row) {
+function aggrBuild(rows, topicMarker, topicScoresDict, chart){
 
-        const ks = Object.keys(row).filter(function (el) {
-            return el.includes("Perceived risk associated with digital technology usage in the workplace");
-        })
-        return ks.map(key => ([key, RISK_FREQ.indexOf(row[key])]));      // [[Email,3], [Phone,1], []...]
+    function score(value){
+        s = topicScoresDict[value]
+        return s? +s : 0
     }
 
-    function riskReduceAdd(p, v) {
-        grabRiskKeysArray(v).forEach(function (ob, idx) {
+    function grabKeysArray(row) {
+
+        const keysFiltered = Object.keys(row).filter(function (k) {
+            return k.includes(topicMarker);
+        })
+        return keysFiltered.map(key => ([key, score(row[key])]));      // [[Email,3], [Phone,1], []...]
+    }
+
+    function reduceAdd(p, v) {
+        grabKeysArray(v).forEach(function (ob, idx) {
 
             //console.log(ob)    // {Email: 3}
-            //Object.keys(ob).forEach(k => p[k] = (p[k] || 0) + ob[k])
             var k = ob[0], v = ob[1]
             p[k] = (p[k] || 0) + v;
-            dbg_by_name('aqqq', p)   
         });
         return p;
     }
 
-    function riskReduceRemove(p, v) {
-        grabRiskKeysArray(v).forEach(function (ob, idx) {
-            //Object.keys(ob).forEach(k => p[k] = (p[k] || 0) - ob[k])
+    function reduceRemove(p, v) {
+        grabKeysArray(v).forEach(function (ob, idx) {
             var k = ob[0], v = ob[1]
             p[k] = (p[k] || 0) - v;
         });
         return p;
     }
 
-    function riskReduceInitial() {
+    function reduceInitial() {
         return [];   // pairs {Email, 0}:5users, {Email, 1}:12users, ....
     }
 
-    var r1 = facts.dimension(function (d) { return grabRiskKeysArray(d) });
-    var riskDim = facts.dimension(function (d) { return grabRiskKeysArray(d) });
-    var r2 = r1.groupAll();
-    console.log(r2);
-    var r4 = r2.reduce(riskReduceAdd, riskReduceRemove, riskReduceInitial).value();
+    var dim1 = rows.dimension(function (d) { return grabKeysArray(d) });
+    var extraDim = rows.dimension(function (d) { return grabKeysArray(d) });
+    var allItems = dim1.groupAll();  // 367
+    var resGr = allItems.reduce(reduceAdd, reduceRemove, reduceInitial).value();
 
-
-    // console.log('pip', r4);
-    
-    r4.all = function () {
+    resGr.all = function () {
         var newObject = [];
         for (var key in this) {      
             
@@ -448,20 +1280,56 @@ const agreeDisagreeValueMap = {
                     key: key,
                     value: this[key]
                 }); 
-                // dbg_by_name('aga', newObject)    // "How often r workplace? [Designing],Always": 106
-                // dbg_by_name('agb', this)         // array[5]
             }
         }
         return newObject;
     }
 
+    return chart.dimension(extraDim).group(resGr)
+}
 
-    riskAggBubbleChart 
+//------------------------------------------------
+// "Never", "Rarely", "Half the time", "Often", "Always"
+aggrBuild(facts, "technologies to perform the following ACTIVITIES", {"Never":0, "Rarely":1, "Half the time":2, "Often":3, "Always":4}
+, activAggBubbleChart)
+
+    activAggBubbleChart.isTopCrownChart = true;
+    activAggBubbleChart 
+        // .width(BUB1_WIDTH)
+        // .height(BUB1_HEIGHT)
+
+        .clipPadding(0)
+        .maxBubbleRelativeSize(0.5)
+        .r(d3.scaleLinear().domain([0,600]))
+        .y(d3.scaleLinear())
+        .x(d3.scaleLinear())
+        .keyAccessor(function(d){ console.log(d); return d.key[0]; })   // d.key[0];
+        .valueAccessor(function(d){ return d.key[1]; })                 // d.key[1];
+        .radiusValueAccessor(function(d){ return d.value; })            // d.value;
+        .colorAccessor(function(d){ return d.value; })
+        //.colors(d3.scale.category10())
+        .label(d => extractBraces(d.key) + ' SCORE ' + d.value)
+        .title(function (d) {
+            return extractBraces(d.key) + ' ' + d.value;
+        })
+        .filter = function() {}
+        .onClick = function(){}
+        
+
+
+//------------------------------------------------
+//2 Attitude
+// aggregated ctg (top personal failures)
+
+    aggrBuild(facts, "What is your attitude toward using digital technologies?", {"Strongly Disagree":0, "Disagree":1, "Neutral":2, "Agree":3, "Strongly Agree":4}
+, attitudeAggBubbleChart)
+
+    
+    attitudeAggBubbleChart.isTopCrownChart = true;
+    attitudeAggBubbleChart 
         .width(BUB1_WIDTH)
         .height(BUB1_HEIGHT)
         // BUBBLE_NODE_CLASS (g)= 'whatever'
-        .dimension(riskDim)
-        .group(r4)
         .clipPadding(0)
         .maxBubbleRelativeSize(0.5)
         .r(d3.scaleLinear().domain([1,6]))
@@ -478,14 +1346,161 @@ const agreeDisagreeValueMap = {
         })
         .filter = function() {}
         .onClick = function(){}
-        /*
-        // NO filtering available (because it has no sence)
+        
+        // NO filtering available (because it has no sense)
+        
+//------------------------------------------------
+//2 Learned at
+// aggregated ctg 
+
+aggrBuild(facts, "How did you learn to use the digital technologies currently used in", {'No': 0, "Yes": 1}
+, learnAggBubbleChart)
+
+    
+    learnAggBubbleChart.isTopCrownChart = true;
+    learnAggBubbleChart 
+        .width(BUB1_WIDTH)
+        .height(BUB1_HEIGHT)
+        // BUBBLE_NODE_CLASS (g)= 'whatever'
+        .clipPadding(0)
+        .maxBubbleRelativeSize(0.5)
+        .r(d3.scaleLinear().domain([1,6]))
+        .y(d3.scaleLinear().domain([0,BUB1_HEIGHT]))
+        .x(d3.scaleLinear().domain([0,BUB1_WIDTH]))
+        .keyAccessor(function(d){ console.log(d); return d.key[0]; })   // d.key[0];
+        .valueAccessor(function(d){ return d.key[1]; })                 // d.key[1];
+        .radiusValueAccessor(function(d){ return d.value; })            // d.value;
+        .colorAccessor(function(d){ return d.value; })
+        //.colors(d3.scale.category10())
+        .label(d => extractBraces(d.key) + ' SCORE ' + d.value)
+        .title(function (d) {
+            return extractBraces(d.key) + ' ' + d.value;
+        })
+        .filter = function() {}
+        .onClick = function(){}
+
+
+
+
+
+//------------------------------------------------
+//2 Preceived Risks 
+// aggregated ctg (most dangerous tech)
+
+    aggrBuild(facts, "Perceived risk associated with digital technology usage in the workplace", {"Strongly Disagree":0, "Disagree":1, "Neutral":2, "Agree":3, "Strongly Agree":4}
+, riskAggBubbleChart)
+
+    riskAggBubbleChart.isTopCrownChart = true;
+    riskAggBubbleChart 
+        .width(BUB1_WIDTH)
+        .height(BUB1_HEIGHT)
+        // BUBBLE_NODE_CLASS (g)= 'whatever'
+
+        .clipPadding(0)
+        .maxBubbleRelativeSize(0.5)
+        .r(d3.scaleLinear().domain([1,6]))
+        .y(d3.scaleLinear().domain([0,BUB1_HEIGHT]))
+        .x(d3.scaleLinear().domain([0,BUB1_WIDTH]))
+        .keyAccessor(function(d){ console.log(d); return d.key[0]; })   // d.key[0];
+        .valueAccessor(function(d){ return d.key[1]; })                 // d.key[1];
+        .radiusValueAccessor(function(d){ return d.value; })            // d.value;
+        .colorAccessor(function(d){ return d.value; })
+        //.colors(d3.scale.category10())
+        .label(d => extractBraces(d.key) + ' SCORE ' + d.value)
+        .title(function (d) {
+            return extractBraces(d.key) + ' ' + d.value;
+        })
+        .filter = function() {}
+        .onClick = function(){}
+
+    // wwww= riskAggBubbleChart.group()
+    // console.log('WW', wwww);
+    
+
+
+
+//-----------------------------------------------
+// 2.2 Risks as Y/N table
+
+const agreeDisagreeValueMap = {
+    'Strongly Disagree': 0,
+    'Disagree': 0,
+    'Neutral': 0,
+    'Agree': 1,
+    'Strongly Agree': 1,
+}
+
+function rynKeysArray(row){
+    const result = Object.keys(row).filter(function(el) {
+        return (row[el] == 'Agree' || row[el] == 'Strongly Agree') 
+        && el.includes("Perceived risk associated with digital");
+    })
+    return result;
+}
+
+function rynReduceAdd(p, v) {
+    rynKeysArray(v).forEach (function(val, idx) {
+        p[val] = (p[val] || 0) + 1;
+    });
+    return p;
+}
+
+function rynReduceRemove(p, v) {
+    rynKeysArray(v).forEach (function(val, idx) {
+        p[val] = (p[val] || 0) - 1;
+    });
+    return p;
+}
+
+function rynReduceInitial() {
+    return [];
+}
+
+if (1){
+    console.log('risks YN chart init')
+
+    var ryn1 = facts.dimension(function (d) { return rynKeysArray(d) });
+    var ryn2 = facts.dimension(function (d) { return rynKeysArray(d) });
+    var rynGroupall = ryn1.groupAll();
+    var ryn4 = rynGroupall.reduce(rynReduceAdd, rynReduceRemove, rynReduceInitial).value();
+    ryn4.all = function() {
+        var newObject = [];
+        for (var key in this) {
+            if (this[key] && key != "all") {
+                newObject.push({
+                    key: key,
+                    value: this[key]
+                });
+            }
+        }
+        return newObject;
+    }
+    
+    riskYNBubbleChart 
+        .width(BUB1_WIDTH)
+        .height(BUB1_HEIGHT)
+        // BUBBLE_NODE_CLASS (g)= 'whatever'
+        .dimension(ryn2)
+        .group(ryn4)
+        .clipPadding(0)
+        .maxBubbleRelativeSize(0.5)
+        .r(d3.scaleLinear().domain([1,6]))
+        .y(d3.scaleLinear().domain([0,BUB1_HEIGHT]))
+        .x(d3.scaleLinear().domain([0,BUB1_WIDTH]))
+        .keyAccessor(function(d){ console.log(d); return d.key[0]; })   // d.key[0];
+        .valueAccessor(function(d){ return d.key[1]; })                 // d.key[1];
+        .radiusValueAccessor(function(d){ return d.value; })            // d.value;
+        .colorAccessor(function(d){ return d.value; })
+        //.colors(d3.scale.category10())
+        .label(d => extractBraces(d.key) + ' SCORE ' + d.value)
+        .title(function (d) {
+            return extractBraces(d.key) + ' ' + d.value;
+        })
         .filterHandler (function (dimension, filters) {
-            
-            console.log("NOT STRICT FILTER");
 
             dimension.filter(null);
             dimension.filterFunction(function (d) {
+
                 for (var i=0; i < filters.length; i++) {
                     if (d.indexOf(filters[i]) <0) return false;
                 }
@@ -493,8 +1508,10 @@ const agreeDisagreeValueMap = {
             });
             return filters;
         })
-        */
-       // something at the bottom
+        .xAxis().ticks(5);
+    }
+
+
 
 
 //------------------------------------------------
@@ -513,8 +1530,8 @@ var ybGroupCount = ybDimension.group()
 
 
 // YB Bar Graph Counted
-birthChart.width(480)
-    .height(150)
+birthChart.width(420)
+    .height(200)
     .margins({ top: 10, right: 10, bottom: 20, left: 40 })
     .dimension(ybDimension)
     .group(ybGroupCount)
@@ -650,9 +1667,213 @@ learnBubbleChart
         return filters;
     })
 
+//==============================================
+// Future
+// 5. rows
+//"will require to perform your job in the future?"
+
+
+function fuKeysArray(row){
+    const result = Object.keys(row).filter(function(el) {
+        return row[el] == "Yes" && el.includes("will require to perform your job in the future?");
+    })
+    return result;
+}
+
+function fuReduceAdd(p, v) {
+    fuKeysArray(v).forEach (function(val, idx) {
+        p[val] = (p[val] || 0) + 1; 
+    });
+    return p;
+}
+
+function fuReduceRemove(p, v) {
+    fuKeysArray(v).forEach (function(val, idx) {
+        p[val] = (p[val] || 0) - 1;
+    });
+    return p;
+}
+
+function fuReduceInitial() {
+    return [];
+}
+
+if (1){
+    console.log('future chart init')
+
+    var fuTags = facts.dimension(function (d) { return fuKeysArray(d) });
+    var fuTags2 = facts.dimension(function (d) { return fuKeysArray(d) });
+    var fuGroupall = fuTags.groupAll();
+    var fuTagsGroup = fuGroupall.reduce(fuReduceAdd, fuReduceRemove, fuReduceInitial).value();
+    fuTagsGroup.all = function() {
+        var newObject = [];
+        for (var key in this) {
+            if (this[key] && key != "all") {
+                newObject.push({
+                    key: key,
+                    value: this[key]
+                });
+            }
+        }
+        return newObject;
+    }
+
+
+futureChart
+    .width(400)
+    .height(300)
+    .renderLabel(true)
+    .labelOffsetY(10)
+    .gap(2)
+    .group(fuTagsGroup)
+    .dimension(fuTags2)
+    .elasticX(true)
+    .label(function (d) { return extractBraces(d.key) + ' ' + d.value })   // extract cat between braces
+
+    .transitionDuration(1500)   //ms
+
+// !!! without FH - it will select only those with YES at 1!!! category
+// it runs ONCE by ONLY THIS chart add/remove filter (click smth)
+        .filterHandler (function (dimension, filters) {
+            // filters = all filters to be applied by THIS chart  (like '..[SMTH]')
+
+            dimension.filter(null);
+            dimension.filterFunction(function (d) {
+                // d = Array of filters which are applicable to current row (YES): ['Email', 'Training', ..]
+                // for each row (in dimension probably)
+                // todo check group-by-group maybe
+                // executed always 367 times
+
+                for (var i=0; i < filters.length; i++) {
+                    if (d.indexOf(filters[i]) <0) return false;
+                }
+                return true;
+            });
+            return filters;
+        })
+        .xAxis().ticks(5);
+    }
+
+//=======================================
+
+aggrBuild(facts, "will require to perform your job in the future?", {"Yes":1, "No":0}
+, futureAggBubbleChart)
+
+futureAggBubbleChart.isTopCrownChart = true;
+futureAggBubbleChart 
+        .width(BUB1_WIDTH)
+        .height(BUB1_HEIGHT)
+        // BUBBLE_NODE_CLASS (g)= 'whatever'
+
+        .clipPadding(0)
+        .maxBubbleRelativeSize(0.5)
+        .r(d3.scaleLinear().domain([1,6]))
+        .y(d3.scaleLinear().domain([0,BUB1_HEIGHT]))
+        .x(d3.scaleLinear().domain([0,BUB1_WIDTH]))
+        .keyAccessor(function(d){ console.log(d); return d.key[0]; })   // d.key[0];
+        .valueAccessor(function(d){ return d.key[1]; })                 // d.key[1];
+        .radiusValueAccessor(function(d){ return d.value; })            // d.value;
+        .colorAccessor(function(d){ return d.value; })
+        //.colors(d3.scale.category10())
+        .label(d => extractBraces(d.key) + ' SCORE ' + d.value)
+        .title(function (d) {
+            return extractBraces(d.key) + ' ' + d.value;
+        })
+        .filter = function() {}
+        .onClick = function(){}
+
+    // wwww= riskAggBubbleChart.group()
+    // console.log('WW', wwww);
+
+//==============================================
+// Used tech today
+// bubble chart, filterable
+
+//aggrBuild(facts, "currently use to perform your daily duties", {"Yes":1, "No":0}, useBubbleChart)
+
+    // 
+        function useKeysArray(row){
+        const result = Object.keys(row).filter(function(el) {
+            return row[el] == "Yes" && el.includes("currently use to perform your");
+        })
+        return result;
+    }
+
+    function useReduceAdd(p, v) {
+        useKeysArray(v).forEach (function(val, idx) {
+            p[val] = (p[val] || 0) + 1; 
+        });
+        return p;
+    }
+
+    function useReduceRemove(p, v) {
+        useKeysArray(v).forEach (function(val, idx) {
+            p[val] = (p[val] || 0) - 1;
+        });
+        return p;
+    }
+
+    function useReduceInitial() {
+        return [];
+    }
+
+    console.log('use chart init')
+
+    var useTags = facts.dimension(function (d) { return useKeysArray(d) });
+    var useTags2 = facts.dimension(function (d) { return useKeysArray(d) });
+    var useGroupall = useTags.groupAll();
+    var useTagsGroup = useGroupall.reduce(useReduceAdd, useReduceRemove, useReduceInitial).value();
+    useTagsGroup.all = function() {
+        var newObject = [];
+        for (var key in this) {
+            if (this[key] && key != "all") {
+                newObject.push({
+                    key: key,
+                    value: this[key]
+                });
+            }
+        }
+        return newObject;
+    }
+
+    useBubbleChart 
+        .width(BUB1_WIDTH)
+        .height(BUB1_HEIGHT)
+        // BUBBLE_NODE_CLASS (g)= 'whatever'
+        .dimension(useTags2)
+        .group(useTagsGroup)
+        .clipPadding(60)
+        .maxBubbleRelativeSize(0.5)
+        .r(d3.scaleLinear().domain([1,6]))
+        .y(d3.scaleLinear().domain([0,BUB1_HEIGHT]))
+        .x(d3.scaleLinear().domain([0,BUB1_WIDTH]))
+        .keyAccessor(function(d){ console.log(d); return d.key[0]; })   // d.key[0];
+        .valueAccessor(function(d){ return d.key[1]; })                 // d.key[1];
+        .radiusValueAccessor(function(d){ return d.value; })            // d.value;
+        .colorAccessor(function(d){ return d.value; })
+        //.colors(d3.scale.category10())
+        .label(d => extractBraces(d.key) + ' ' + d.value)
+        .title(function (d) {
+            return extractBraces(d.key) + ' ' + d.value;
+        })
+        .filterHandler (function (dimension, filters) {
+            
+            console.log("NOT STRICT FILTER");
+
+            dimension.filter(null);
+            dimension.filterFunction(function (d) {
+                for (var i=0; i < filters.length; i++) {
+                    if (d.indexOf(filters[i]) <0) return false;
+                }
+                return true;
+            });
+            return filters;
+        })          
+
+
 //=============================================
 // Print filtered notes -> DBG
-// 5
+// 6
 
 // var dimension = index.dimension(dc.pluck('key'));
 // to debug:  group.top(Infinity);     or group.all()
@@ -681,36 +1902,60 @@ fTable
 
 //----------------------------------------------------------------------------------------------
 // Render the Charts
-  dc.renderAll();
+    dc.renderAll();
 
+    d3.selectAll('#dc-activities-heatmap g.cols text')
+        // .text('qqqqqqqqqqqqq')
+        .style('text-anchor', 'start')
+        .style('transform', function(d){
+            el = d3.select(this)
+            console.log(el, el.attr('x'))
+            return `translate(${el.attr('x')}px,${el.attr('y')}px)rotate(-90deg)translate(-${el.attr('x')}px,-${el.attr('y')}px)`
+        })
+
+    postProc()  // init top values
   //console.log(futureTagsChart.filter())
 
 
+// '#top-risk'
+function calcTop1(ch, tag){
+    var arr = ch.group().all()
+    console.log('TOP FEARS', arr);
+    // var arr = r4.all()
+    
+    var topR4 = arr.sort((a, b) => b.value-a.value)[0]
+    console.log('MOSTLY', topR4.key)
+    d3.select(tag).text( extractBraces(topR4.key))
+}
+
+
 function postProc(){
-  // every time when whole this dashboard is redrawn - we must update list of filters
-  // TODO only once
-  // TODO maybe there is some more jcy way
-  console.log("PP");
-
-    //triggerSimpleGrav()
+    // every time when whole this dashboard is redrawn - we must update list of filters
+    // TODO only once
+    // TODO maybe there is some more jcy way
+    console.log("PP");
 
 
-  var vvv = all.value()
-  console.log("Filtered: " + vvv);
-  //d3.select('#filteredInfo').html('Filtered: ' + vvv);
-  d3.select('.filtered-value').html(""+vvv+"/"+C_ALL);
+    var vvv = all.value()
+    console.log("Filtered: " + vvv);
+    //d3.select('#filteredInfo').html('Filtered: ' + vvv);
+    d3.select('.filtered-value').html(""+vvv+"/"+C_ALL);
 
-//   console.log('TOP FEARS', r4.all().top(5));
+    calcTop1(attitudeAggBubbleChart, '#top-attitude')
+    calcTop1(riskAggBubbleChart, '#top-risk')
+    calcTop1(activAggBubbleChart, '#top-activ')
+    calcTop1(learnAggBubbleChart, '#top-learn')
+    calcTop1(futureAggBubbleChart, '#top-future')
 
-  
-  // TODO 2 rewritten
-  var allFilters = []
-  for (var cha of CHARTS){
-    allFilters = allFilters.concat(cha.filters())
-  }
-  console.log("Filters: ", allFilters);
+    
+    // TODO 2 rewritten
+    var allFilters = []
+    for (var cha of CHARTS){
+        allFilters = allFilters.concat(cha.filters())
+    }
+    console.log("Filters: ", allFilters);
 
-// TODO 1 choose Automated equipment   (currently use)
+    // TODO 1 choose Automated equipment   (currently use)
 
 
 
@@ -771,6 +2016,7 @@ function postProc(){
         dc.redrawAll();
     }
 
+    
 }
 
 
@@ -786,6 +2032,200 @@ function postProc(){
 
 
 
-      </script>
-   </body>
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+        var url = 'https://script.google.com/macros/s/AKfycbyVQW35ZOqimGOUk7zKyAVLrh20nByGW6XirFmpNA25uTCuDHrA/exec';
+        //url = './data.json';
+        async function drawCharts(url, customOptions) {
+            customOptions = {
+                ...{
+                    personalColor: '#7300FF',
+                    decimalPlaces: 2,
+                    legend: { display: false },
+                    // Uncomment these two lines to change the graphs to personal
+                    //showMultiPersonal: true,
+                    //backgroundColor: '#ababab'
+                },
+                ...customOptions
+            }
+            const agreeDisagreeValueMap = {
+                'Strongly Disagree': 0,
+                'Disagree': 0,
+                'Neutral': 0,
+                'Agree': 1,
+                'Strongly Agree': 1,
+            }
+            const yesNoValueMap = {
+                'No': 0,
+                'Yes': 1,
+            }
+            const k4iCharts = new K4ICharts(url, customOptions);
+            await k4iCharts.loadData()
+            $('#responses-value').text(k4iCharts.numResponses)
+            $(".loading").css("display", "none");
+            // Title: How often do you use digital technologies to perform the following ACTIVITIES:
+            let multiColumns = [
+                'Accounting/financial management',
+                'Making Bookings',
+                'Emailing',
+                'Making audio or video calls',
+                'Marketing',
+                'Printing and scanning',
+                'Designing',
+                'Monitoring (e.g. employees, production, security)',
+                'Research and development',
+                'Training',
+                'Filing'
+            ]
+            let valueMap = {
+                'Never': 0,
+                'Rarely': 1,
+                'Half the time': 2,
+                'Often': 3,
+                'Always': 4
+            }
+            k4iCharts.createMultiBarChart('myChart3', multiColumns, valueMap);
+            // Title: Where did you get digitial skills training in your organisation?
+            multiColumns = [
+                'Accredited training',
+                'In-house training',
+                'No support system to enhance digital skills',
+                'Self-development of staff',
+                'Online training',
+                'External training',
+            ]
+            k4iCharts.createMultiBarChart('myChart4', multiColumns, agreeDisagreeValueMap);
+            // Title: Perceived risk associated with digital technology usage in the workplace.
+            multiColumns = [
+                'Potential financial loss',
+                'Data loss',
+                'Online scamming',
+                'Less trustworthy than pen and paper',
+                'Takes too long to learn',
+                'Risk to privacy of my personal data',
+            ]
+            k4iCharts.createMultiBarChart('myChart5', multiColumns, agreeDisagreeValueMap);
+            // Title: What is your attitude toward using digital technologies? 
+            multiColumns = [
+                'Waste of time',
+                'Not interested',
+                'No additional value added',
+                'Too complicated',
+                'No real need',
+                'Limit my capacity as a human',
+            ]
+            k4iCharts.createMultiBarChart('myChart6', multiColumns, agreeDisagreeValueMap);
+            // Title: Among the following digital technologies which ones do you currently use to perform your daily duties
+            multiColumns = [
+                'State-of-the-art printers and scanners',
+                'Business WhatsApp',
+                'Hi-tech telephone',
+                'Faster computers and tablets',
+                'Digital filing',
+                'Mobile Applications',
+                'Blockchain technology',
+                'Reliable internet',
+                'Smartboards',
+                'Software and web applications',
+                'Automated equipment',
+                'Voice over Internet protocol (VOIP)',
+                'Video conferencing applications',
+                'Artificial intelligence',
+            ]
+            k4iCharts.createMultiBarChart('myChart7', multiColumns, yesNoValueMap);
+            // Title: How did you learn to use the digital technologies currently used in your organisation?
+            multiColumns = [
+                'High school',
+                'In-house training/Workshops',
+                'Peer-learning (learning from friends, colleagues, family member etc.)',
+                'Self-taught',
+                'Short-courses',
+                'Tertiary education',
+                'Previous work experience',
+                'External training/workshops (training conducted and organised outside the organisation)',
+                'I have NO digital skills'
+            ]
+            k4iCharts.createMultiBarChart('myChart8', multiColumns, yesNoValueMap);
+            // Title: In your opinion what are the other digital technologies you will require to perform your job in the future?
+            multiColumns = [
+                'Faster Wi-Fi/Internet connection',
+                'Ultra-modern equipment (Upgrade current digital equipment/s)',
+                'Artificial Intelligence (AI)',
+                'Internet of Things (IoT)',
+                'Robots',
+                'Scanners',
+                'Tracking systems',
+                'Voice over internet protocol (VOIP)'
+            ]
+            k4iCharts.createMultiBarChart('myChart9', multiColumns, yesNoValueMap);
+        }
+    </script>
+
+
+    <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://openupsa.github.io/k4i-survey/js/charts.js"></script>
+    <script>
+        async function drawCharts() {
+            // do this stuff once
+          	var customOptions = {
+    		personalColor: '#7300FF',
+			}
+            var url = 'https://script.google.com/macros/s/AKfycbzI0ETzEo77c6anMoUEyFDfoSdi5Eg8tWNqieClSPjI50SyhkM/exec';
+            const k4iCharts = new K4ICharts(url, customOptions);;
+            await k4iCharts.loadData()
+            $('#responses-value').text(k4iCharts.numResponses)
+            $(".loading").css("display", "none");
+            // one line per chart
+            k4iCharts.createPersonalChart('myChart3', 'What is your highest education level (Only indicate the highest)?', 'bar');
+            k4iCharts.createChart('myChart1', 'Emailing', 'bar');
+            k4iCharts.createChart('myChart2', 'Filing', 'pie');
+        }
+drawCharts()
+</script>-->
+
+    <!-- // Per page code (use this for general graphs) -->
+    <script>
+        drawCharts(url);
+    </script>
+
+    <style>
+        .truncate {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</body>
+
 </html>
